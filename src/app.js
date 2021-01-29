@@ -5,6 +5,7 @@ const express = require('express');
 const hbs=require('hbs');
 
 const app = express();
+const port = process.env.PORT || 3000;
 
 //creating paths
 const publicdir = path.join(__dirname,'../public');
@@ -69,6 +70,6 @@ app.get('*',(req,res)=>{
     res.render('page404')
 });
 
-app.listen(3000,()=>{
-    console.log('this server is working right now');
+app.listen(port,()=>{
+    console.log('this server is working right now on port'+port);
 });
