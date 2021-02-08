@@ -70,19 +70,20 @@ weatherForm.addEventListener('submit', (e) => {
                 
 
 
-                if ((currentHour + 3 >= 10) || (currentHour + 6 >= 10) ||(currentHour + 9 >= 10)) {
+                if ((currentHour + 3 >= 10) || (currentHour + 6 >= 10) ||(currentHour + 9 >= 10)||(currentHour + 12 >= 10)) {
                     list1.innerHTML = `Now<span>${data.currentTemp + '°C'}</span>`;
-                    list2.innerHTML = `${currentHour + 3+':00'}<span>${data.temp3 + '°C'}</span>`;
-                    list3.innerHTML = `${currentHour + 6+':00'}<span>${data.temp6 + '°C'}</span>`
-                    list4.innerHTML = `${currentHour + 9+':00'}<span>${data.temp9 + '°C'}</span>`
-                    list5.innerHTML = `${currentHour + 12+':00'}<span>${data.temp12 + '°C'}</span>`
+                    list2.innerHTML = `${(currentHour + 3)%24+':00'}<span>${data.temp3 + '°C'}</span>`;
+                    list3.innerHTML = `${(currentHour + 6)%24+':00'}<span>${data.temp6 + '°C'}</span>`
+                    list4.innerHTML = `${(currentHour + 9)%24+':00'}<span>${data.temp9 + '°C'}</span>`
+                    
+                    list5.innerHTML = `${(currentHour + 12)%24+':00'}<span>${data.temp12 + '°C'}</span>`
                 }
                 else {
                     list1.innerHTML = `Now<span>${data.currentTemp + '°C'}</span>`;
-                    list2.innerHTML = `0${currentHour + 3+':00'}<span>${data.temp3 + '°C'}</span>`;
-                    list3.innerHTML = `0${currentHour + 6+':00'}<span>${data.temp6 + '°C'}</span>`
-                    list4.innerHTML = `0${currentHour + 9+':00'}<span>${data.temp9 + '°C'}</span>`
-                    list5.innerHTML = `0${currentHour + 12+':00'}<span>${data.temp12 + '°C'}</span>`
+                    list2.innerHTML = `0${(currentHour + 3)%24+':00'}<span>${data.temp3 + '°C'}</span>`;
+                    list3.innerHTML = `0${(currentHour + 6)%24+':00'}<span>${data.temp6 + '°C'}</span>`
+                    list4.innerHTML = `0${(currentHour + 9)%24+':00'}<span>${data.temp9 + '°C'}</span>`
+                    list5.innerHTML = `0${(currentHour + 12)%24+':00'}<span>${data.temp12 + '°C'}</span>`
                 }
 
                 
