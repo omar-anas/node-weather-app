@@ -6,7 +6,7 @@ var currentHour = date.getHours();
 
 
 const weatherForm = document.querySelector('form');
-const search = document.querySelector('input');
+const search = document.querySelector('input').trim();
 
 const icon = document.getElementById('icon');
 console.log(icon.src)
@@ -36,7 +36,7 @@ const list1 = document.querySelector('#l1')
 
 weatherForm.addEventListener('submit', (e) => {
     e.preventDefault();
-    messageOne.textContent = "Loading...";
+    messageOne.textContent = "Loading....";
     messageError.textContent = "";
 
     fetch(`/weather?address=${search.value}`).then((response) => {
@@ -83,7 +83,7 @@ weatherForm.addEventListener('submit', (e) => {
                     list2.innerHTML = `0${(currentHour + 3)%24+':00'}<span>${data.temp3 + '°C'}</span>`;
                     list3.innerHTML = `0${(currentHour + 6)%24+':00'}<span>${data.temp6 + '°C'}</span>`
                     list4.innerHTML = `0${(currentHour + 9)%24+':00'}<span>${data.temp9 + '°C'}</span>`
-                    list5.innerHTML = `0${(currentHour + 12)%24+':00'}<span>${data.temp12 + '°C'}</span>`
+                    list5.innerHTML = `0${(currentHour + 12)%24+':00'}<span>${data.temp12 + '°C'}</span> `
                 }
 
                 
