@@ -6,7 +6,7 @@ var currentHour = date.getHours();
 
 
 const weatherForm = document.querySelector('form');
-const search = document.querySelector('input').trim();
+const search = document.querySelector('input');
 
 const icon = document.getElementById('icon');
 console.log(icon.src)
@@ -39,7 +39,7 @@ weatherForm.addEventListener('submit', (e) => {
     messageOne.textContent = "Loading....";
     messageError.textContent = "";
 
-    fetch(`/weather?address=${search.value}`).then((response) => {
+    fetch(`/weather?address=${search.value.trim()}`).then((response) => {
         response.json().then((data) => {
             if (data.error) {
 
