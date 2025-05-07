@@ -31,40 +31,38 @@ app.get('/help',(req,res)=>{
     })
 });
 
-app.get('/weather',(req,res)=>{
-    if(!req.query.address){
-        return res.send({error:'you must provide an address!'});
+app.get('/weather', async (req, res) => {
+    if (!req.query.address) {
+        return res.send({ error: 'you must provide an address!' });
     }
-    
-    geocode(req.query.address,(error,{latitude,longitude,location}={})=>{
-        if(error){
-           return res.send({error});
-        }
-        
 
-            forecast(latitude,longitude,(error,foredata)=>{
-                if(error){
-                    return res.send({error});
+    try {
+        const geoData = await geocode(req.query.address);
+        const forecastData = await forecast(geoData.latitude, geoData.longitude);
 
-                }
-                else{
-                    res.send({
-                        currentTemp:foredata.temp,
-                        desc:foredata.main,
-                        address:location,
-                        icon:foredata.icon,
-                        temp3:foredata.temp3,
-                        temp6:foredata.temp6,
-                        temp9:foredata.temp9,
-                        temp12:foredata.temp12
-                    })
-                }
-           })
-        
-    })
+        res.send({
+            location: {
+                name: forecastData.location.name,
+                region: forecastData.location.region,
+                country: forecastData.location.country
+            },
+            current: {
+                temp: forecastData.current.temp,
+                weather: forecastData.current.weather,
+                humidity: forecastData.current.humidity,
+                wind_speed: forecastData.current.wind_speed,
+                wind_dir: forecastData.current.wind_dir,
+                uv: forecastData.current.uv,
+                visibility: forecastData.current.visibility
+            },
+            hourly: forecastData.hourly,
+            daily: forecastData.daily
+        });
 
+    } catch (error) {
+        res.send({ error: error.message });
+    }
 });
-
 
 app.get('*',(req,res)=>{
     res.render('page404')

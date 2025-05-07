@@ -1,25 +1,37 @@
 const request = require('request');
+const util = require('util');
 
-const geocode = (address, callback) => {
-    const geoUrl = `https://api.mapbox.com/geocoding/v5/mapbox.places/${address}.json?access_token=pk.eyJ1Ijoib21hcmFuYXMiLCJhIjoiY2tqdm96eHFwMGFoODJubHNlYXc1M2RvZyJ9.yNRHae29ReXX0Orj8oiILA&limit=2`;
-    request({ url: geoUrl, json: true }, (error, response) => {
-        if (error) {
-            callback('unable to connect weather service , try another time :)', undefined)
+// Convert request to use promises
+const requestPromise = util.promisify(request);
+
+const geocode = async (address) => {
+    const encodedAddress = encodeURIComponent(address);
+    const geoUrl = `https://nominatim.openstreetmap.org/search?format=json&q=${encodedAddress}&limit=1`;
+    
+    try {
+        const { body } = await requestPromise({
+            url: geoUrl,
+            json: true,
+            headers: {
+                'User-Agent': 'omaranas/1.0 (omar.anas61@hotmail.com)' // REQUIRED by Nominatim
+            }
+        });
+
+        if (!body || body.length === 0) {
+            throw new Error('Unable to find location. Try another search.');
         }
-        else if (response.body.features.length === 0) {
-            callback('unable to find location ,try another search ', undefined);
+
+        return {
+            latitude: parseFloat(body[0].lat),
+            longitude: parseFloat(body[0].lon),
+            location: body[0].display_name
+        };
+    } catch (error) {
+        if (error.code === 'ETIMEDOUT' || error.code === 'ESOCKETTIMEDOUT') {
+            throw new Error('Unable to connect to geocoding service. Check your network connection.');
         }
-        else {
-            callback(undefined, {
-                latitude: response.body.features[0].center[1],
-                longitude: response.body.features[0].center[0],
-                location: response.body.features[0].place_name
-            });
+        throw error;
+    }
+};
 
-
-        }
-    })
-
-}
-
-module.exports=geocode;
+module.exports = geocode;
