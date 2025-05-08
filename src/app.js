@@ -1,33 +1,42 @@
 const path = require('path');
-const geocode=require('./utils/geocode');
-const forecast=require('./utils/forecast');
+const geocode = require('./utils/geocode');
+const forecast = require('./utils/forecast');
 const express = require('express');
-const hbs=require('hbs');
+const hbs = require('hbs');
 
 const app = express();
 const port = process.env.PORT || 3000;
 
 //creating paths
-const publicdir = path.join(__dirname,'../public');
-const partials = path.join(__dirname,'../templates/partials');
-const viewpath = path.join(__dirname,'../templates/views');
+const publicdir = path.join(__dirname, '../public');
+const partials = path.join(__dirname, '../templates/partials');
+const viewpath = path.join(__dirname, '../templates/views');
+
 //setup handelpars and view locations
-app.set('view engine','hbs');
-app.set('views',viewpath);
+app.set('view engine', 'hbs');
+app.set('views', viewpath);
 hbs.registerPartials(partials);
 
+// Security headers
+app.use((req, res, next) => {
+    res.setHeader('X-Content-Type-Options', 'nosniff');
+    res.setHeader('X-Frame-Options', 'DENY');
+    res.setHeader('X-XSS-Protection', '1; mode=block');
+    next();
+});
 
-app.use(express.static(publicdir));
+// Serve static files
+app.use('/', express.static(publicdir));
 
-app.get('',(req,res)=>{
+// Routes
+app.get('/', (req, res) => {
     res.render('index');
 });
 
-
-app.get('/help',(req,res)=>{
-    res.render('help',{
-        title:'HELP',
-        name:'omar'
+app.get('/help', (req, res) => {
+    res.render('help', {
+        title: 'HELP',
+        name: 'omar'
     })
 });
 
@@ -64,10 +73,10 @@ app.get('/weather', async (req, res) => {
     }
 });
 
-app.get('*',(req,res)=>{
+app.get('*', (req, res) => {
     res.render('page404')
 });
 
-app.listen(port,()=>{
-    console.log('this server is working right now on port'+port);
+app.listen(port, () => {
+    console.log('this server is working right now on port' + port);
 });
